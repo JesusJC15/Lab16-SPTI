@@ -7,34 +7,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout del repositorio
       - uses: actions/checkout@v3
 
-      # 2️⃣ Configurar Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
-      # 3️⃣ Instalar Bandit y Trivy
       - name: Install Bandit and Trivy
         run: |
           pip install bandit
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 
-      # 4️⃣ Ejecutar Bandit
       - name: Run Bandit
         run: |
           bandit -r . -f txt > bandit-report.txt
           cat bandit-report.txt
 
-      # 5️⃣ Ejecutar Trivy FS
       - name: Run Trivy FS
         run: |
           trivy fs --exit-code 1 --severity CRITICAL,HIGH . || true
           trivy fs -f json -o trivy-report.json .
 
-      # 6️⃣ Subir reportes como artifacts (v4)
       - name: Upload Security Reports
         uses: actions/upload-artifact@v4
         with:
