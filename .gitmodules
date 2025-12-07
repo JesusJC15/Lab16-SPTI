@@ -1,0 +1,3 @@
+[submodule "DjangoGoat"]
+	path = DjangoGoat
+	url = https://github.com/red-and-black/DjangoGoat.git
