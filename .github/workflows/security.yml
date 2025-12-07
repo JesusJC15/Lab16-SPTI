@@ -32,12 +32,11 @@ jobs:
       - name: Run Trivy FS
         run: |
           trivy fs --exit-code 1 --severity CRITICAL,HIGH . || true
-          # Esto crea un reporte de vulnerabilidades críticas y altas
           trivy fs -f json -o trivy-report.json .
 
-      # 6️⃣ Subir reportes como artifacts
+      # 6️⃣ Subir reportes como artifacts (v4)
       - name: Upload Security Reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: security-reports
           path: |
