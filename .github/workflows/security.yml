@@ -1,0 +1,29 @@
+name: Security Scan
+
+on: [push, pull_request]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install Bandit and Trivy
+        run: |
+          pip install bandit
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.51.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.51.1_Linux-64bit.deb
+
+      - name: Run Bandit
+        run: bandit -r . -f txt
+
+      - name: Run Trivy FS
+        run: trivy fs .
